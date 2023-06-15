@@ -15,7 +15,11 @@ router.get('/sensors', (req, res) => {
 
 router.post('/sensors', (req, res) => {
 
-    // console.log(req.headers.authorization);
+    if(req.body.sensor_name === '' || req.body.value === ''){
+        return res.status(500).json({
+            message: "Sensor data can't be empty!"
+        });
+    }
 
     if (!req.headers.authorization) {
         return res.status(500).json({
