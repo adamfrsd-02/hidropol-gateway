@@ -6,12 +6,33 @@ const express = require('express'),
 const BASE_URL = process.env.SENSOR_URL;
 const api = apiAdaptor(BASE_URL);
 
-router.get('/sensors', (req, res) => {
+router.get('/latest_sensor', (req, res) => {
     api.get('/api/v1/sensors').then(response => {
         const resp = response.data;
-        return res.status(200).json(resp);
+        //get latest data from each key in data and exclude the undefined key
+        const latest = resp.data.reduce((acc, cur) => {
+            if (cur.value !== undefined) {
+                acc[cur.sensor_name] = cur.value;
+            }
+            return acc;
+        }, {});
+
+        // const latest = resp.data.reduce((acc, cur) => {
+        //     if (acc[cur.sensor_name] != undefined) {
+        //         if (acc[cur.sensor_name].timestamp < cur.timestamp) {
+        //             acc[cur.sensor_name] = cur;
+        //         }
+        //     } else {
+        //         acc[cur.sensor_name] = cur;
+        //     }
+        //     return acc;
+        // }, {});
+
+        
+        return res.status(200).json(latest);
     })
 });
+
 
 router.post('/sensors', (req, res) => {
 
