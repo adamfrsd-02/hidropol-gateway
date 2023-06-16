@@ -15,7 +15,7 @@ router.get('/sensors', (req, res) => {
 
 router.post('/sensors', (req, res) => {
 
-    if(req.body.sensor_name === '' || req.body.value === '' || req.body.length < 1){
+    if(req.body.sensor_name === '' || req.body.value === '' || req.body == {}){
         return res.status(500).json({
             message: "Sensor data can't be empty!"
         });
